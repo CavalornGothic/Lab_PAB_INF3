@@ -19,7 +19,7 @@ namespace Lab_PAB_INF3.Lab_1
             DataBase dataBase = new DataBase(_connString);
             Logger.ConsoleLog(0, "zaczynam wykonywać próbę metodą nr 1..");
             research.Start = DateTime.Now;
-            foreach(var x in data)
+            foreach (var x in data)
             {
                 DateTime dataStart = DateTime.Now;
                 using (var conn = dataBase.Connect())
@@ -73,7 +73,7 @@ namespace Lab_PAB_INF3.Lab_1
             Logger.ConsoleLog(0, "zaczynam wykonywać próbę metodą nr 2..");
             research.Start = DateTime.Now;
             string query = "";
-            foreach(var x in data)
+            foreach (var x in data)
             {
                 query += @$"
                      INSERT INTO [dbo].[Kody]
@@ -105,6 +105,78 @@ namespace Lab_PAB_INF3.Lab_1
             Logger.ConsoleLog(0, " ------------------------ | WYNIK | ------------------------");
             Logger.ConsoleLog(0, $"start: {research.Start.ToString("HH:mm:ss.ffff")}");
             Logger.ConsoleLog(0, $"czas trwania zapytania: {TimeSpan.FromTicks(dataStart.Ticks - dataEnd.Ticks).TotalSeconds} sekund");
+            Logger.ConsoleLog(0, $"koniec: {research.End.ToString("HH:mm:ss.ffff")}");
+            Logger.ConsoleLog(0, $"łączny czas trwania: {TimeSpan.FromTicks(research.End.Ticks - research.Start.Ticks).TotalSeconds} sekund");
+            Logger.ConsoleLog(0, " -----------------------------------------------------------");
+        }
+        /*
+         * Metoda nr 3 (dodatkowa)
+         * "Paczkuje" dane i wysyła je w rozmiarze 1000 wierszy
+         */
+        public void SendPackageData(ICollection<LineDTO> data)
+        {
+            ResearchTime research = new ResearchTime();
+            DataBase dataBase = new DataBase(_connString);
+            List<double> meas = new List<double>();
+            Logger.ConsoleLog(0, "zaczynam wykonywać próbę metodą nr 3..");
+            research.Start = DateTime.Now;
+            string query = "";
+            int sendData = 0;
+            int sizeData = data.Count;
+            foreach (var x in data)
+            {
+                DateTime dataStart = DateTime.Now;
+                query += @$"
+                     INSERT INTO [dbo].[Kody]
+                               ([zipcode]
+                               ,[address]
+                               ,[city]
+                               ,[province]
+                               ,[district])
+                         VALUES
+                               ('{CharsHelper.SpecialChars(x.ZipCode)}'
+                               ,'{CharsHelper.SpecialChars(x.Address)}'
+                               ,'{CharsHelper.SpecialChars(x.City)}'
+                               ,'{CharsHelper.SpecialChars(x.Province)}'
+                               ,'{CharsHelper.SpecialChars(x.District)}'
+                    );
+                ";
+                sendData++;
+                if((sendData%1000) == 0)
+                {
+                    using (var conn = dataBase.Connect())
+                    {
+                        conn.Open();
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                    }
+                    query = "";
+                    DateTime dataEnd = DateTime.Now;
+                    meas.Add(TimeSpan.FromTicks(dataEnd.Ticks - dataStart.Ticks).TotalSeconds);
+                }
+                else if(sizeData-sendData < 1000)
+                {
+                    using (var conn = dataBase.Connect())
+                    {
+                        conn.Open();
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                    }
+                    query = "";
+                    DateTime dataEnd = DateTime.Now;
+                    meas.Add(TimeSpan.FromTicks(dataEnd.Ticks - dataStart.Ticks).TotalSeconds);
+                }
+            }
+            research.End = DateTime.Now;
+            research.Meas = meas;
+            Logger.ConsoleLog(0, "skończono próbę metodą nr 3");
+            Logger.ConsoleLog(0, " ------------------------ | WYNIK | ------------------------");
+            Logger.ConsoleLog(0, $"start: {research.Start.ToString("HH:mm:ss.ffff")}");
+            Logger.ConsoleLog(0, $"max: {research.Meas.Max()}");
+            Logger.ConsoleLog(0, $"avg: {research.Meas.Average()}");
+            Logger.ConsoleLog(0, $"min: {research.Meas.Min()}");
             Logger.ConsoleLog(0, $"koniec: {research.End.ToString("HH:mm:ss.ffff")}");
             Logger.ConsoleLog(0, $"łączny czas trwania: {TimeSpan.FromTicks(research.End.Ticks - research.Start.Ticks).TotalSeconds} sekund");
             Logger.ConsoleLog(0, " -----------------------------------------------------------");
