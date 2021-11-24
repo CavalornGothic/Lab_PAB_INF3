@@ -91,7 +91,7 @@ namespace Lab_PAB_INF3.Lab_1
             ResearchTime research = new ResearchTime();
             List<double> meas = new List<double>();
             Logger.ConsoleLog(0, "zaczynam wykonywać próbę metodą nr 3..");
-            Logger.ConsoleLog(0, $"wielkość pakietu: {packageSize.ToString()}");
+            Logger.ConsoleLog(0, $"wielkość pakietu: {packageSize}");
             research.Start = DateTime.Now;
             string query = "";
             int sendData = 0, sizeData = data.Count;

@@ -30,7 +30,7 @@ namespace Lab_PAB_INF3
                                 Logger.ConsoleLog(0, " [1] - Metoda nr 1 ");
                                 Logger.ConsoleLog(0, " [2] - Metoda nr 2 ");
                                 Logger.ConsoleLog(0, " [3] - Metoda nr 3 ");
-                                Logger.ConsoleLog(0, " [3] - Metoda nr 4 (wielowątkowość) ");
+                                Logger.ConsoleLog(0, " [4] - Metoda nr 4 (wielowątkowość) ");
                                 Logger.ConsoleLog(0, " [back] - Powrót ");
                                 wybor2 = Console.ReadLine();
                                 DataUploader uploader = new DataUploader();
@@ -56,13 +56,8 @@ namespace Lab_PAB_INF3
                                         }
                                     case "4":
                                         {
+                                            Logger.ConsoleLog(0, "Metoda nr 4..");
                                             uploader.SendDataMultiThread(await new DataCSVLoader(filePath).GetAllLinesAsync(), 2500, 50);
-                                            break;
-                                        }
-                                    case "5":
-                                        {
-                                            //Logger.ConsoleLog(0, "Metoda nr 5..");
-                                            //await uploader.SendPackageDataAsync(await new DataCSVLoader(filePath).GetAllLinesAsync(), 125);
                                             break;
                                         }
                                     case "back":
