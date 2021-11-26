@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lab_PAB_INF3.Lab_1
+namespace Lab_PAB_INF3
 {
     static public class Settings
     {

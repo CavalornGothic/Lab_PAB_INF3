@@ -39,6 +39,23 @@ namespace Lab_PAB_INF3
             return affected;
         }
 
+        public int InsertDataWithParams(string query, Dictionary<string, string> paramsQuery)
+        {
+            int affected = 0;
+            using (var conn = this.Connect())
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(query, conn);
+                foreach(var par in paramsQuery)
+                {
+                    cmd.Parameters.AddWithValue(par.Key, par.Value);
+                }
+                affected = cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+            return affected;
+        }
+
         public string BuildSendDataQuery(string query, IDictionary<string, string> parameters)
         {
             string copyQuery = query;
