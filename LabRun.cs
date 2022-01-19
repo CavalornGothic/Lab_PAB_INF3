@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Lab_PAB_INF3.Lab_1;
 using Lab_PAB_INF3.Lab_2;
@@ -17,6 +18,7 @@ namespace Lab_PAB_INF3
                 Logger.ConsoleLog(0, "---------- | MENU | ----------");
                 Logger.ConsoleLog(0, " [0] - Laboratorium nr 1 ");
                 Logger.ConsoleLog(0, " [1] - Laboratorium nr 2 ");
+                Logger.ConsoleLog(0, " [2] - Laboratorium nr 3 ");
                 Logger.ConsoleLog(0, " [exit] - Wyjście ");
                 wybor = Console.ReadLine();
                 switch(wybor)
@@ -136,6 +138,33 @@ namespace Lab_PAB_INF3
                                             break;
                                         }
                                     default : break;
+                                }
+                            }
+                            break;
+                        }
+                    case "2":
+                        {
+                            Lab_3.Deadlock deadlock = new Lab_3.Deadlock();
+                            Logger.ConsoleLog(0, "Próba wywołania zakleszczenia:");
+                            while(true)
+                            {
+                                try
+                                {
+                                    Task t1 = Task.Run(() => deadlock.SendQuery()); 
+                                    Task t2 = Task.Run(() => deadlock.SendQuery2());
+                                    Task t3 = Task.Run(() => deadlock.SendQuery());
+                                    Task t4 = Task.Run(() => deadlock.SendQuery2());
+                                    Task t5 = Task.Run(() => deadlock.SendQuery());
+                                    Task t6 = Task.Run(() => deadlock.SendQuery2());
+                                    Task t7 = Task.Run(() => deadlock.SendQuery());
+                                    Task t8 = Task.Run(() => deadlock.SendQuery2());
+                                    Task t9 = Task.Run(() => deadlock.SendQuery());
+                                    Task t10 = Task.Run(() => deadlock.SendQuery2());
+                                }
+                                catch(Exception ex)
+                                {
+                                    Logger.ConsoleLog(0, ex.ToString());
+                                    break;
                                 }
                             }
                             break;
